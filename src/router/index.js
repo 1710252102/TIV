@@ -25,12 +25,12 @@ const routes = [
   {
     path: '/home',
     component: home,
-    redirect: '/welcome',
+    redirect: '/users',
     children: [
-      {
-        path: '/welcome',
-        component: welcome
-      },
+      // {
+      //   path: '/welcome',
+      //   component: welcome
+      // },
       {
         path: '/groups',
         component: group
