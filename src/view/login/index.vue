@@ -49,7 +49,7 @@ export default {
       // 登录表单的数据绑定对象
       loginForm: {
         username: "admin",
-        password: "123456",
+        password: "123456"
       },
       loginFormRules: {
         username: [
@@ -58,8 +58,8 @@ export default {
             min: 3,
             max: 10,
             message: "长度在 3 到 10 个字符",
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
@@ -67,30 +67,37 @@ export default {
             min: 6,
             max: 15,
             message: "长度在 6 到 15 个字符",
-            trigger: "blur",
-          },
-        ],
-      },
+            trigger: "blur"
+          }
+        ]
+      }
     };
   },
+  mounted() {
+    this.getList();
+  },
   methods: {
+    async getList() {
+      const res = await this.$http.get("/parameter/query");
+      console.log("res :>> ", res);
+    },
     // 点击重置按钮 重置登录表单
     resetLoginForm() {
       this.$refs.loginFormRef.resetFields();
     },
     login() {
       // 预校验
-      this.$refs.loginFormRef.validate(async (valid) => {
+      this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
-        const { data: res } = await this.$http.post("login", this.loginForm);
-        if (res.meta.status !== 200) return this.$message.error("登录失败! ");
+        const { data: res } = await this.$http.post("/login", this.loginForm);
+        if (res.status !== 200) return this.$message.error("登录失败! ");
         this.$message.success("登录成功");
         window.sessionStorage.setItem("token", res.data.token);
         console.log(res.data.token);
         this.$router.push("/home");
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
