@@ -142,8 +142,11 @@ export default {
       activePath: "/users"
     };
   },
-  created() {
+  mounted() {
     this.activePath = window.sessionStorage.getItem("activePath") || "/users";
+    setInterval(() => {
+      this.timeData = moment(Date.now()).format("YYYY/MM/DD HH:mm");
+    }, 6000);
   },
   methods: {
     logout() {
