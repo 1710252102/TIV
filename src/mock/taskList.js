@@ -37,14 +37,12 @@ const ans = Mock.mock({
 });
 let taskList = [];
 export const getList = require => {
+  
   require = JSON.parse(require.body);
   const { pagenum, pagesize, query } = require.parmas;
   let row = [];
   if (query) {
     console.log("query :>> ", query);
-    // var reg = RegExp(/query/);
-    // console.log();
-    // console.log(reg.test(ans.rows[0].task));
     row = ans.rows.filter(e => e.task.indexOf(query) != -1);
     console.log("row :>> ", row);
   } else {
@@ -68,13 +66,6 @@ export const getList = require => {
 };
 export const deleteTask = require => {
   let id = require.url.substr(7);
-  // let index = ans.rows.filter((item, index) => {
-  //   if (id === item.id) {
-  //     console.log("ok",item);
-  //     console.log('index :>> ', index);
-  //     return index;
-  //   }
-  // });
   let index = null;
   for (let i = 0; i < ans.rows.length; i++) {
     if (id === ans.rows[i].id) {

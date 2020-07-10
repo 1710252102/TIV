@@ -9,7 +9,7 @@
       <el-row :gutter="20">
         <el-col :span="7">
           <el-input
-            placeholder="请输入任务名称"
+            placeholder="请输入内容"
             clearable
             v-model="queryInfo.query"
             @clear="getTaskList"
@@ -17,12 +17,12 @@
             <el-button
               slot="append"
               icon="el-icon-search"
-              @click="getTaskList()"
+              @click="getTaskList"
             ></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary">添加任务</el-button>
+          <el-button type="primary" @click="addForm()">添加任务</el-button>
         </el-col>
       </el-row>
       <template>
@@ -74,6 +74,67 @@
         @current-change="handleCurrentChange"
       ></el-pagination>
     </el-card>
+    <!-- 添加用户对话框 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="addDialogVisible"
+      width="50%"
+      @close="addDialogClosed"
+    >
+      <el-form
+        :model="addRuleForm"
+        :rules="addRules"
+        ref="addRuleFormRef"
+        label-width="100px"
+      >
+        <el-form-item label="任务名称" prop="task">
+          <el-input style="width:55%"> </el-input>
+        </el-form-item>
+        <el-form-item label="项目名称">
+          <el-select v-model="addRuleForm.region" placeholder="请选择活动区域">
+            <el-option
+              v-for="item in projectList"
+              :key="item.label"
+              :label="item.label"
+              :value="item.label"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="预计时间" required>
+          <el-date-picker
+            v-model="value1"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="实际时间" required>
+          <el-date-picker
+            v-model="value2"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="任务关联人员">
+          <el-cascader
+            :options="userList"
+            :props="{ multiple: true }"
+            clearable
+          ></el-cascader>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addTask">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -90,7 +151,66 @@ export default {
         //每页显示多少数据
         pagesize: 5
       },
-      total: null
+      total: null,
+      addDialogVisible: false,
+      addRuleForm: {
+        task: "",
+        region: ""
+      },
+      addRules: [],
+      value1: "",
+      value2: "",
+      projectList: [
+        {
+          value: "1",
+          label: "数据智能业务部"
+        },
+        {
+          value: "2",
+          label: "企业智能业务部"
+        },
+        {
+          value: "3",
+          label: "机器智能业务部"
+        },
+        {
+          value: "3",
+          label: "人工智能部"
+        },
+        {
+          value: "3",
+          label: "平台产品部"
+        }
+      ],
+      userList: [
+        {
+          value: 1,
+          label: "上海",
+          children: [
+            { value: 3, label: "普陀" },
+            { value: 4, label: "黄埔" },
+            { value: 5, label: "徐汇" }
+          ]
+        },
+        {
+          value: 2,
+          label: "江苏",
+          children: [
+            { value: 8, label: "南京" },
+            { value: 9, label: "苏州" },
+            { value: 10, label: "无锡" }
+          ]
+        },
+        {
+          value: 3,
+          label: "浙江",
+          children: [
+            { value: 13, label: "杭州" },
+            { value: 14, label: "宁波" },
+            { value: 15, label: "嘉兴" }
+          ]
+        }
+      ]
     };
   },
   created() {
@@ -101,7 +221,7 @@ export default {
       const { data: res } = await this.$http.post("/tasks", {
         parmas: this.queryInfo
       });
-      console.log('res :>> ', res);
+      console.log("res :>> ", res);
       if (res.status !== 200) {
         return this.$message.error("获取任务列表失败");
       }
@@ -146,7 +266,19 @@ export default {
         }
       }
       this.getTaskList();
-    }
+    },
+    addForm(id) {
+      if (!id) {
+        this.addDialogVisible = true;
+      } else {
+      }
+    },
+    //
+    addDialogClosed() {
+      console.log("this.$refs.addRuleFormRef :>> ", this.$refs.addRuleFormRef);
+      this.$refs.addRuleFormRef.resetFields();
+    },
+    addTask() {}
   }
 };
 </script>
@@ -154,5 +286,10 @@ export default {
 <style lang="less" scoped>
 .el-tag {
   margin: 10px;
+}
+.line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
