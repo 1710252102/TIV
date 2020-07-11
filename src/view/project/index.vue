@@ -12,8 +12,8 @@
       <!-- gutter 属性来指定每一栏之间的间隔，默认间隔为 0。-->
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList">
-            <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
+          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getProjectList">
+            <el-button slot="append" icon="el-icon-search" @click="getProjectList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -21,13 +21,13 @@
         </el-col>
       </el-row>
       <!-- 用户列表区域 -->
-      <el-table :data="userlist" border stripe>
+      <el-table :data="projectlist" border stripe>
         <!-- stripe: 斑马条纹 border：边框 模板列-->
         <el-table-column type="index" label="#"></el-table-column>
-        <el-table-column prop="username" label="名称"></el-table-column>
-        <el-table-column prop="email" label="描述"></el-table-column>
-        <el-table-column prop="mobile" label="预计开始时间"></el-table-column>
-        <el-table-column prop="role_name" label="预计结束时间"></el-table-column>
+        <el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column prop="describle" label="描述"></el-table-column>
+        <el-table-column prop="expStart" label="预计开始时间"></el-table-column>
+        <el-table-column prop="expEnd" label="预计结束时间"></el-table-column>
         <!--        <el-table-column label="状态">-->
         <!--          <template slot-scope="scope">-->
         <!--            &lt;!&ndash;            双向数据绑定   作用域插槽会覆盖props  v-model 双向绑定&ndash;&gt;-->
@@ -38,7 +38,7 @@
           <template slot-scope="scope">
             <!--            {{scope.row}}}-->
             <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="showEditDialog(scope.row.id)"></el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="removeUserById(scope.row.id)"></el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="removeProjectgitById(scope.row.id)"></el-button>
             <!--            <el-tooltip class="item" effect="dark" content="角色分配" :enterable="false" placement="top">-->
             <!--              &lt;!&ndash;     enterable         &ndash;&gt;-->
             <!--              <el-button type="warning" icon="el-icon-setting" size="mini" circle @click="showSetRole(scope.row)"></el-button>-->
@@ -59,11 +59,11 @@
         <el-form-item label="描述" prop="password">
           <el-input v-model="addUserForm.password"></el-input>
         </el-form-item>
-        <el-form-item label="预计开始时间" prop="email">
-          <el-input v-model="addUserForm.email"></el-input>
+        <el-form-item label="预计开始时间" prop="expStart">
+          <el-input v-model="addUserForm.expStart"></el-input>
         </el-form-item>
-        <el-form-item label="预计结束时间" prop="mobile">
-          <el-input v-model="addUserForm.mobile"></el-input>
+        <el-form-item label="预计结束时间" prop="expEnd">
+          <el-input v-model="addUserForm.expEnd"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -77,13 +77,16 @@
       <!-- 内容主体 -->
       <el-form :model="editUserForm" ref="editUserFormRef" :rules="editUserFormRules" label-width="120px">
         <el-form-item label="项目名称">
-          <el-input v-model="editUserForm.username" disabled></el-input>
+          <el-input v-model="editUserForm.name" disabled></el-input>
         </el-form-item>
-        <el-form-item label="描述" prop="email">
-          <el-input v-model="editUserForm.email"></el-input>
+        <el-form-item label="描述" prop="describle">
+          <el-input v-model="editUserForm.describle"></el-input>
         </el-form-item>
-        <el-form-item label="预计开始时间" prop="mobile">
-          <el-input v-model="editUserForm.mobile"></el-input>
+        <el-form-item label="预计开始时间" prop="expStart">
+          <el-input v-model="editUserForm.expStart"></el-input>
+        </el-form-item>
+        <el-form-item label="预计开始时间" prop="expEnd">
+          <el-input v-model="editUserForm.expEnd"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -97,24 +100,24 @@
 <script>
   export default {
     data () {
-      // 自定义邮箱规则
-      var checkEmail = (rule, value, callback) => {
-        const regEmail = /^\w+@\w+(\.\w+)+$/
-        if (regEmail.test(value)) {
-          // 合法邮箱
-          return callback()
-        }
-        callback(new Error('请输入合法邮箱'))
-      }
-      // 自定义手机号规则
-      var checkMobile = (rule, value, callback) => {
-        const regMobile = /^1[34578]\d{9}$/
-        if (regMobile.test(value)) {
-          return callback()
-        }
-        // 返回一个错误提示
-        callback(new Error('请输入合法的手机号码'))
-      }
+      // // 自定义邮箱规则
+      // var checkEmail = (rule, value, callback) => {
+      //   const regEmail = /^\w+@\w+(\.\w+)+$/
+      //   if (regEmail.test(value)) {
+      //     // 合法邮箱
+      //     return callback()
+      //   }
+      //   callback(new Error('请输入合法邮箱'))
+      // }
+      // // 自定义手机号规则
+      // var checkMobile = (rule, value, callback) => {
+      //   const regMobile = /^1[34578]\d{9}$/
+      //   if (regMobile.test(value)) {
+      //     return callback()
+      //   }
+      //   // 返回一个错误提示
+      //   callback(new Error('请输入合法的手机号码'))
+      // }
       return {
         //  获取用户列表查询参数对象 到时候根据接口修改查询参数
         queryInfo: {
@@ -139,7 +142,7 @@
         //  用户添加表单验证规则
         addUserFormRules: {
           username: [
-            { required: true, message: '请输入用户名', trigger: 'blur' },
+            { required: true, message: '请输入项目名称', trigger: 'blur' },
             {
               min: 2,
               max: 10,
@@ -148,7 +151,7 @@
             }
           ],
           password: [
-            { required: true, message: '请输入用户密码', trigger: 'blur' },
+            { required: true, message: '请输入项目描述', trigger: 'blur' },
             {
               min: 6,
               max: 18,
@@ -156,14 +159,6 @@
               trigger: 'blur'
             }
           ],
-          email: [
-            { required: true, message: '请输入邮箱', trigger: 'blur' },
-            { validator: checkEmail, trigger: 'blur' }
-          ],
-          mobile: [
-            { required: true, message: '请输入手机号码', trigger: 'blur' },
-            { validator: checkMobile, trigger: 'blur' }
-          ]
         },
         //  修改用户对话框
         editDialogVisible: false,
@@ -171,24 +166,16 @@
         editUserForm: {},
         //  编辑用户表单验证
         editUserFormRules:{
-          email: [
-            { required: true, message: '请输入邮箱', trigger: 'blur' },
-            { validator: checkEmail, trigger: 'blur' }
-          ],
-          mobile: [
-            { required: true, message: '请输入手机号码', trigger: 'blur' },
-            { validator: checkMobile, trigger: 'blur' }
-          ]
         },
       }
     },
     created () {
       //生命周期函数中获取列表
-      this.getUserList()
+      this.getProjectList()
     },
     methods:{
       //获取用户列表
-      async getUserList () {
+      async getProjectList () {
         const { data: res } = await this.$http.get('users', {
           params: this.queryInfo
         })
