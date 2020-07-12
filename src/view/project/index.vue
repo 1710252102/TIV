@@ -25,7 +25,7 @@
         <!-- stripe: 斑马条纹 border：边框 模板列-->
         <el-table-column type="index" label="#"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
-        <el-table-column prop="describle" label="描述"></el-table-column>
+        <el-table-column prop="describe" label="描述"></el-table-column>
         <el-table-column prop="expStart" label="预计开始时间"></el-table-column>
         <el-table-column prop="expEnd" label="预计结束时间"></el-table-column>
         <!--        <el-table-column label="状态">-->
@@ -50,48 +50,68 @@
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryInfo.pagenum" :page-sizes="[2, 5, 10, 15]" :page-size="queryInfo.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
     </el-card>
     <!-- 添加用户的对话框    addDialogVisible 默认为隐藏对话框   close-->
-    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
+    <el-dialog title="添加项目" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
       <!-- 内容主体 -->
-      <el-form :model="addUserForm" ref="addUserFormRef" :rules="addUserFormRules" label-width="110px">
+      <el-form :model="addProjectForm" ref="addProjectFormRef" :rules="addProjectFormRules" label-width="110px">
         <el-form-item label="名称" prop="username">
-          <el-input v-model="addUserForm.username"></el-input>
+          <el-input v-model="addProjectForm.username"></el-input>
         </el-form-item>
-        <el-form-item label="描述" prop="password">
-          <el-input v-model="addUserForm.password"></el-input>
+        <el-form-item label="描述" prop="describe">
+          <el-input v-model="addProjectForm.describe"></el-input>
         </el-form-item>
-        <el-form-item label="预计开始时间" prop="expStart">
-          <el-input v-model="addUserForm.expStart"></el-input>
+<!--        <el-form-item label="预计开始时间" prop="expStart">-->
+<!--          <el-input v-model="addProjectForm.expStart"></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="预计结束时间" prop="expEnd">-->
+<!--          <el-input v-model="addProjectForm.expEnd"></el-input>-->
+<!--        </el-form-item>-->
+        <el-form-item label="预计时间" required>
+          <el-date-picker
+            v-model="value1"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="预计结束时间" prop="expEnd">
-          <el-input v-model="addUserForm.expEnd"></el-input>
+        <el-form-item label="实际时间" required>
+          <el-date-picker
+            v-model="value2"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addUser">确 定</el-button>
+        <el-button type="primary" @click="addProject">确 定</el-button>
       </span>
     </el-dialog>
 
     <!-- 修改用户的对话框 -->
     <el-dialog title="修改项目信息" :visible.sync="editDialogVisible" width="50%" @close="editDialogClosed">
       <!-- 内容主体 -->
-      <el-form :model="editUserForm" ref="editUserFormRef" :rules="editUserFormRules" label-width="120px">
+      <el-form :model="editProjectForm" ref="editProjectFormRef" :rules="editProjectFormRules" label-width="120px">
         <el-form-item label="项目名称">
-          <el-input v-model="editUserForm.name" disabled></el-input>
+          <el-input v-model="editProjectForm.name" disabled></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="describle">
-          <el-input v-model="editUserForm.describle"></el-input>
+          <el-input v-model="editProjectForm.describle"></el-input>
         </el-form-item>
         <el-form-item label="预计开始时间" prop="expStart">
-          <el-input v-model="editUserForm.expStart"></el-input>
+          <el-input v-model="editProjectForm.expStart"></el-input>
         </el-form-item>
         <el-form-item label="预计开始时间" prop="expEnd">
-          <el-input v-model="editUserForm.expEnd"></el-input>
+          <el-input v-model="editProjectForm.expEnd"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editUser">确 定</el-button>
+        <el-button type="primary" @click="editProject">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -128,16 +148,17 @@
           //每页显示多少数据
           pagesize: 5
         },
-        userlist: [],
+        projectlist: [],
         total: 0,
         //  添加用户对话框
         addDialogVisible: false,
         //  增加用户
-        addUserForm: {
+        addProjectForm: {
           username: '',
           password: '',
-          email: '',
-          mobile: ''
+          describle: '',
+          expStart: '',
+          expEnd:''
         },
         //  用户添加表单验证规则
         addUserFormRules: {
@@ -163,9 +184,9 @@
         //  修改用户对话框
         editDialogVisible: false,
         // 编辑用户表单
-        editUserForm: {},
+        editProjectForm: {},
         //  编辑用户表单验证
-        editUserFormRules:{
+        editProjectFormRules:{
         },
       }
     },
@@ -176,15 +197,15 @@
     methods:{
       //获取用户列表
       async getProjectList () {
-        const { data: res } = await this.$http.get('users', {
+        const { data: res } = await this.$http.post('/projects/getProjectList', {
           params: this.queryInfo
         })
         console.log(res) // 打印用户数据
-        if (res.meta.status !== 200) {
+        if (res.status !== 200) {
           return this.$message.error('获取用户列表失败！')
         }
-        this.userlist = res.data.users
         this.total = res.data.total
+        this.projectlist = res.data.rows
       },
       //  监听pagesize改变的事件
       handleSizeChange (newSize) {
