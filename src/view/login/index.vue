@@ -73,14 +73,14 @@ export default {
       }
     };
   },
-  mounted() {
-    this.getList();
+  created() {
+    // this.getList();
   },
   methods: {
-    async getList() {
-      const res = await this.$http.get("/parameter/query");
-      console.log("res :>> ", res);
-    },
+    // async getList() {
+    //   const res = await this.$http.get("/parameter/query");
+    //   // console.log("res :>> ", res);
+    // },
     // 点击重置按钮 重置登录表单
     resetLoginForm() {
       this.$refs.loginFormRef.resetFields();

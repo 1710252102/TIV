@@ -5,6 +5,7 @@ body,
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  min-width: 1366px;
   /* font-size: 32px; */
 }
 /*导航栏下边距*/
@@ -27,9 +28,13 @@ body,
 }
 
 /* 解决级联选择框的问题 */
-div .el-scrollbar__wrap {
+/* div .el-scrollbar__wrap {
   height: 300px !important
-}
+} */
+
+/* .el-cascader-menu {
+  height: 300px;
+} */
 
 /* 步骤条 */
 .el-steps {

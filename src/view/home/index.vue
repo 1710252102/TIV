@@ -29,7 +29,7 @@
           :default-active="activePath"
         >
           <!-- 一级菜单 -->
-          <el-submenu :index="ii+''" v-for="(item, ii) in menuList" :key="ii">
+          <el-submenu :index="ii + ''" v-for="(item, ii) in menuList" :key="ii">
             <!-- 一级菜单的模板区域 -->
             <template slot="title">
               <i :class="iconList[ii]"></i>
@@ -60,106 +60,109 @@
 </template>
 
 <script>
-import moment from 'moment'
+import moment from "moment";
 export default {
   data() {
     return {
-      timeData: moment(Date.now()).format('YYYY/MM/DD HH:mm'),
+      timeData: moment(Date.now()).format("YYYY/MM/DD HH:mm"),
       // 左侧菜单数据
       menuList: [
         {
-          authName: '用户管理',
+          authName: "用户管理",
           children: [
             {
-              authName: '用户列表',
-              path: '/users',
+              authName: "用户列表",
+              path: "/users",
               children: []
             }
           ]
           // id:0,
         },
         {
-          authName: '项目管理',
+          authName: "项目管理",
           children: [
             {
-              authName: '项目列表',
-              path: '/projects',
+              authName: "项目列表",
+              path: "/projects",
               children: []
             }
           ]
         },
         {
-          authName: '组管理',
+          authName: "组管理",
           children: [
             {
-              authName: '组列表',
-              path: '/groups',
+              authName: "组列表",
+              path: "/groups",
               children: []
             }
           ]
         },
         {
-          authName: '任务管理',
+          authName: "任务管理",
           children: [
             {
-              authName: '任务列表',
-              path: '/tasks',
+              authName: "任务列表",
+              path: "/tasks",
               children: []
             }
           ]
         },
         {
-          authName: '可视化显示',
+          authName: "可视化显示",
           children: [
             {
-              authName: '项目任务视图',
-              path: '/taskView',
+              authName: "项目任务视图",
+              path: "/taskView",
               children: []
             },
             {
-              authName: '组内人员任务视图',
-              path: '/userView',
+              authName: "组内人员任务视图",
+              path: "/userView",
               children: []
             },
             {
-              authName: '组内项目任务视图',
-              path: '/projectView',
+              authName: "组内项目任务视图",
+              path: "/projectView",
               children: []
             }
           ]
         }
       ],
       iconList: [
-        'el-icon-user',
-        'el-icon-folder',
-        'el-icon-copy-document',
-        'el-icon-notebook-1',
-        'el-icon-s-data'
+        "el-icon-user",
+        "el-icon-folder",
+        "el-icon-copy-document",
+        "el-icon-notebook-1",
+        "el-icon-s-data"
       ],
       // 是否折叠
       isCollapse: false,
       // 被激活的链接地址
-      activePath: ''
-    }
+      activePath: "/users"
+    };
   },
-  created() {
-    this.activePath = window.sessionStorage.getItem('activePath')
+  mounted() {
+    this.activePath = window.sessionStorage.getItem("activePath") || "/users";
+    setInterval(() => {
+      this.timeData = moment(Date.now()).format("YYYY/MM/DD HH:mm");
+    }, 6000);
   },
   methods: {
     logout() {
-      window.sessionStorage.clear()
-      this.$router.push('/login')
+      window.sessionStorage.clear();
+      this.$router.push("/login");
     },
     // 点击按钮,切换猜到的折叠与展开
     toggleCollapse() {
-      this.isCollapse = !this.isCollapse
+      this.isCollapse = !this.isCollapse;
     },
     saveNavState(activePath) {
-      window.sessionStorage.setItem('activePath', activePath)
-      this.activePath = activePath
+      window.sessionStorage.setItem("activePath", activePath);
+      this.activePath = activePath;
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

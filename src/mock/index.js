@@ -2,8 +2,11 @@
 import Mock from "mockjs";
 import Login from "./login.js";
 import { getList, deleteTask } from "./taskList.js";
+<<<<<<< HEAD
 import {getUserList,deleteUser} from "./user.js"//用户
 import {getProjectList}from "./project.js"//项目
+=======
+>>>>>>> origin/suifeng
 // 设置拦截ajax请求的相应时间
 Mock.setup({
   timeout: "200-600"
@@ -12,6 +15,7 @@ Mock.setup({
 Mock.mock("/login", "post", Login);
 Mock.mock("/tasks", "post", getList);
 Mock.mock(/\/tasks/, "delete", deleteTask);
+<<<<<<< HEAD
 //用户管理
 Mock.mock("/users/getUserList","post",getUserList);//用户列表展示
 // Mock.mock("","get",)//给根据id查询用户
@@ -25,3 +29,5 @@ Mock.mock("","",);//修改项目信息
 Mock.mock("","",);//增加项目信息
 Mock.mock("","",);//删除项目信息
 
+=======
+>>>>>>> origin/suifeng
