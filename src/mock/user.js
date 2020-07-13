@@ -7,7 +7,8 @@ const user = Mock.mock({
       id: '@guid',
       name: '@cname',
       password:'123456',
-      email:'@email'
+      email:'@email',
+      phone:'13941338754'
     }
   ]
 });

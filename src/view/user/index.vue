@@ -37,36 +37,21 @@
       <el-table :data="userlist" border stripe>
         <!-- stripe: 斑马条纹 border：边框 模板列-->
         <el-table-column type="index" label="#"></el-table-column>
-        <el-table-column prop="username" label="昵称"></el-table-column>
+        <el-table-column prop="username" label="用户名"></el-table-column>
+<!--        <el-table-column prop="password" label="密码"></el-table-column>-->
+        <el-table-column prop="name" label="昵称"></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
-        <el-table-column prop="name" label="姓名"></el-table-column>
-        <el-table-column prop="role_name" label="角色"></el-table-column>
-
+        <el-table-column prop="phone" label="电话"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <!--            {{scope.row}}}-->
-            <el-button
-              type="primary"
-              icon="el-icon-edit"
-              size="mini"
-              circle
-              @click="showEditDialog(scope.row)"
-            ></el-button>
-            <el-button
-              type="danger"
-              icon="el-icon-delete"
-              size="mini"
-              circle
-              @click="removeUserById(scope.row.id)"
+            <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="showEditDialog(scope.row)"></el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="removeUserById(scope.row.id)"
             ></el-button>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页区域 -->
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="queryInfo.pagenum"
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryInfo.pagenum"
         :page-sizes="[2, 5, 10, 15]"
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -87,17 +72,20 @@
         :rules="addUserFormRules"
         label-width="100px"
       >
-        <el-form-item label="昵称" prop="username">
+        <el-form-item label="用户名" prop="username">
           <el-input v-model="addUserForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model="addUserForm.password"></el-input>
         </el-form-item>
+        <el-form-item label="昵称" prop="name">
+          <el-input v-model="addUserForm.name"></el-input>
+        </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="addUserForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="addUserForm.name"></el-input>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="addUserForm.phone"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -107,8 +95,7 @@
     </el-dialog>
 
     <!-- 修改用户的对话框 -->
-    <el-dialog
-      title="修改用户信息"
+    <el-dialog title="修改用户信息"
       :visible.sync="editDialogVisible"
       width="50%"
       @close="editDialogClosed"
@@ -120,17 +107,20 @@
         :rules="editUserFormRules"
         label-width="70px"
       >
-        <el-form-item label="昵称">
-          <el-input v-model="editUserForm.username" disabled></el-input>
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="editUserForm.username" ></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="editUserForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="昵称" prop="name">
+          <el-input v-model="editUserForm.name"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="editUserForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="姓名" prop="username">
-          <el-input v-model="editUserForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="editUserForm.password"></el-input>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="editUserForm.phone"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -180,8 +170,9 @@ export default {
       addUserForm: {
         username: "",
         password: "",
+        name: "",
         email: "",
-        name: ""
+        phone: ""
       },
       query:'',
 
@@ -282,7 +273,8 @@ export default {
         username: this.addUserForm.username,
         name:this.addUserForm.name,
         password:this.addUserForm.password,
-       email:this.addUserForm.email
+       email:this.addUserForm.email,
+        phone:this.addUserForm.phone
       }
       this.userlist.push(userInfo)
       // console.log(this.userlist,this.addUserForm)
@@ -312,9 +304,11 @@ export default {
       console.log('123')
       this.editDialogVisible = true;
       this.$set(this.editUserForm,'username', record.username);
-      this.$set(this.editUserForm, 'name', record.name);
       this.$set(this.editUserForm, 'password', record.password);
+      this.$set(this.editUserForm, 'name', record.name);
       this.$set(this.editUserForm, 'email', record.email);
+      this.$set(this.editUserForm, 'phone', record.phone);
+
 
     },
       // this.editDialogVisible = true;
@@ -340,6 +334,7 @@ export default {
             item.name = this.editUserForm.name;
             item.password = this.editUserForm.password;
             item.email = this.editUserForm.email;
+            item.phone = this.editUserForm.phone;
           }
         });
         //
