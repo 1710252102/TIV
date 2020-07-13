@@ -36,10 +36,11 @@ const ans = Mock.mock({
   ]
 });
 let taskList = [];
-export const getList = require => {
-  
-  require = JSON.parse(require.body);
-  const { pagenum, pagesize, query } = require.parmas;
+
+// 获取所有任务列表
+export const getList = req => {
+  req = JSON.parse(req.body);
+  const { pagenum, pagesize, query } = req.parmas;
   let row = [];
   if (query) {
     console.log("query :>> ", query);
@@ -64,8 +65,9 @@ export const getList = require => {
   };
   return taskList;
 };
-export const deleteTask = require => {
-  let id = require.url.substr(7);
+
+export const deleteTask = req => {
+  let id = req.url.substr(7);
   let index = null;
   for (let i = 0; i < ans.rows.length; i++) {
     if (id === ans.rows[i].id) {
@@ -84,6 +86,76 @@ export const deleteTask = require => {
     }
   };
 };
-// let tag = this.tableData.filter(item => id === item.id);
-//         console.log("tag :>> ", tag);
-//         this.tableData.splice(tag,1);
+export const addTask = req => {
+  req = JSON.parse(req.body);
+  // console.log(req);
+  let { children, expTime, realTime, id, project, task } = req.parmas;
+  console.log(children, expTime, realTime, id, project, task);
+  let child = [];
+  for (var i = 0; i < children.length; i++) {
+    child[i] = Mock.mock({
+      id: "@guid",
+      name: children[i][1],
+      group: children[i][0]
+    });
+  }
+  if (id) {
+    console.log("addTaskid :>> ", id);
+    for (let i = 0; i < ans.rows.length; i++) {
+      if (id === ans.rows[i].id) {
+        let item = ans.rows[i];
+        (item.id = id),
+          (item.task = task),
+          (item.project = project),
+          (item.expStart = expTime[0]),
+          (item.expEnd = expTime[1]),
+          (item.realStart = realTime[0]),
+          (item.realEnd = realTime[1]),
+          (item.children = child);
+      }
+    }
+  } else {
+    id = Mock.mock("@guid");
+    console.log(1, ans.rows.length);
+    ans.total++;
+    ans.rows[ans.total - 1] = {
+      id: id,
+      task: task,
+      project: project,
+      expStart: expTime[0],
+      expEnd: expTime[1],
+      realStart: realTime[0],
+      realEnd: realTime[1],
+      children: child
+    };
+  }
+
+  return {
+    status: 200,
+    message: "success",
+    data: {
+      tags: ans.rows[ans.total - 1]
+    }
+  };
+};
+export const putTask = req => {
+  let id = req.url.substr(7);
+  for (let i = 0; i < ans.rows.length; i++) {
+    if (id === ans.rows[i].id) {
+      return {
+        status: 200,
+        message: "success",
+        data: ans.rows[i]
+      };
+    }
+  }
+};
+// export const getUser = () => {
+//   return {
+//     status: 200,
+//     message: "success",
+//     data: {
+//       tags: ans.rows
+//     }
+//   };
+// };
