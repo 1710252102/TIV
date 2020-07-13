@@ -22,7 +22,7 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" @click="addForm()">添加任务</el-button>
+          <el-button type="primary" @click="showAddForm()">添加任务</el-button>
         </el-col>
       </el-row>
       <template>
@@ -51,7 +51,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 circle
-                @click="editTaskById(scope.row.id)"
+                @click="showAddForm(scope.row.id)"
               ></el-button>
               <el-button
                 type="danger"
@@ -81,29 +81,33 @@
       width="50%"
       @close="addDialogClosed"
     >
+      <!-- 内容 -->
       <el-form
-        :model="addRuleForm"
-        :rules="addRules"
-        ref="addRuleFormRef"
+        :model="addTaskList"
+        ref="addTaskListRef"
         label-width="100px"
+        :rules="addTaskFormRules"
       >
         <el-form-item label="任务名称" prop="task">
-          <el-input style="width:55%"> </el-input>
+          <el-input style="width:55%" v-model="addTaskList.task"> </el-input>
         </el-form-item>
-        <el-form-item label="项目名称">
-          <el-select v-model="addRuleForm.region" placeholder="请选择活动区域">
+        <el-form-item label="项目名称" prop="project">
+          <el-select
+            v-model="addTaskList.project"
+            placeholder="请选择活动区域"
+            required
+          >
             <el-option
               v-for="item in projectList"
               :key="item.label"
-              :label="item.label"
               :value="item.label"
             >
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="预计时间" required>
+        <el-form-item label="预计时间" prop="expTime" required>
           <el-date-picker
-            v-model="value1"
+            v-model="addTaskList.expTime"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -111,9 +115,9 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="实际时间" required>
+        <el-form-item label="实际时间" prop="realTime" required>
           <el-date-picker
-            v-model="value2"
+            v-model="addTaskList.realTime"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -121,11 +125,12 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="任务关联人员">
+        <el-form-item label="任务关联人员" prop="children" required>
           <el-cascader
             :options="userList"
             :props="{ multiple: true }"
             clearable
+            v-model="addTaskList.children"
           ></el-cascader>
         </el-form-item>
       </el-form>
@@ -139,6 +144,7 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
@@ -152,62 +158,81 @@ export default {
         pagesize: 5
       },
       total: null,
+      //  添加表单 默认不展示
       addDialogVisible: false,
-      addRuleForm: {
+      // 添加任务数组
+      addTaskList: {
+        id: "",
         task: "",
-        region: ""
+        project: "",
+        expTime: [],
+        realTime: [],
+        children: []
       },
-      addRules: [],
-      value1: "",
-      value2: "",
+      // 添加任务验证规则
+      addTaskFormRules: {
+        task: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        project: [{ required: true, message: "选择所属项目", trigger: "blur" }],
+        expTime: [
+          { required: true, message: "请输入预计时间", trigger: "blur" }
+        ],
+        realTime: [
+          { required: true, message: "请输入实际时间", trigger: "blur" }
+        ],
+        children: [
+          { required: true, message: "请选择关联人员", trigger: "blur" }
+        ]
+      },
+      // 项目列表
       projectList: [
         {
-          value: "1",
+          value: "数据智能业务部",
           label: "数据智能业务部"
         },
         {
-          value: "2",
+          value: "企业智能业务部",
           label: "企业智能业务部"
         },
         {
-          value: "3",
+          value: "机器智能业务部",
           label: "机器智能业务部"
         },
         {
-          value: "3",
+          value: "人工智能部",
           label: "人工智能部"
         },
         {
-          value: "3",
+          value: "平台产品部",
           label: "平台产品部"
         }
       ],
+      // 用户列表
       userList: [
         {
-          value: 1,
-          label: "上海",
+          value: "项目技术部 ",
+          label: "项目技术部 ",
           children: [
-            { value: 3, label: "普陀" },
-            { value: 4, label: "黄埔" },
-            { value: 5, label: "徐汇" }
+            { value: "曾娟", label: "曾娟" },
+            { value: "黄埔1", label: "黄埔1" },
+            { value: "徐汇", label: "徐汇" }
           ]
         },
         {
-          value: 2,
-          label: "江苏",
+          value: "平台产品部",
+          label: "平台产品部",
           children: [
-            { value: 8, label: "南京" },
-            { value: 9, label: "苏州" },
-            { value: 10, label: "无锡" }
+            { value: "南京", label: "南京" },
+            { value: "苏州", label: "苏州" },
+            { value: "无锡", label: "无锡" }
           ]
         },
         {
-          value: 3,
-          label: "浙江",
+          value: "企业智能业务部",
+          label: "企业智能业务部",
           children: [
-            { value: 13, label: "杭州" },
-            { value: 14, label: "宁波" },
-            { value: 15, label: "嘉兴" }
+            { value: "周明", label: "周明" },
+            { value: "任平", label: "任平" },
+            { value: "杨娟", label: "杨娟" }
           ]
         }
       ]
@@ -221,7 +246,7 @@ export default {
       const { data: res } = await this.$http.post("/tasks", {
         parmas: this.queryInfo
       });
-      console.log("res :>> ", res);
+      console.log("index res :>> ", res);
       if (res.status !== 200) {
         return this.$message.error("获取任务列表失败");
       }
@@ -238,7 +263,9 @@ export default {
       this.queryInfo.pagenum = newSize;
       this.getTaskList();
     },
-    editTaskById(id) {},
+
+    // editTaskById(id) {},
+    // 移除某个任务
     async removeTaskById(id) {
       const confirmResult = await this.$confirm(
         "此操作将永久删除任务, 是否继续?",
@@ -254,7 +281,7 @@ export default {
       if (confirmResult !== "confirm") {
         return this.$message.info("已取消删除");
       }
-      const { data: res } = await this.$http.delete("/tasks/" + id);
+      const { data: res } = await this.$http.delete("/tasks" + id);
       console.log(res);
       if (res.status !== 200) {
         return this.$message.error("删除任务失败");
@@ -267,18 +294,66 @@ export default {
       }
       this.getTaskList();
     },
-    addForm(id) {
+    // 添加任务
+    async showAddForm(id) {
+      this.addDialogVisible = true;
       if (!id) {
-        this.addDialogVisible = true;
       } else {
+        const { data: res } = await this.$http.put("/tasks/" + id);
+        this.addTaskList.task = res.data.task;
+        this.addTaskList.project = res.data.project;
+        this.addTaskList.children = res.data.children;
+        this.addTaskList.id = res.data.id;
+        this.addTaskList.expTime = [res.data.expStart, res.data.expEnd];
+        this.addTaskList.realTime = [res.data.realStart, res.data.realEnd];
+        console.log(this.userList);
+        console.log("res.data.children :>> ", res.data.children);
+        for (var i = 0; i < res.data.children.length; i++) {
+          this.userList[i] = {};
+          this.userList[i].label = this.userList[i].value =
+            res.data.children[i].group;
+          // this.userList[i].children.label = this.userList[i].children.value =
+          //   res.data.children[i].name;
+        }
+        // console.log(
+        //   " this.addTaskList.children:>> ",
+        //   this.addTaskList.children
+        // );
+        // this.addTaskList.children=[res.data.children.]
       }
     },
-    //
+    // 点击取消 删除 清空内容
     addDialogClosed() {
-      console.log("this.$refs.addRuleFormRef :>> ", this.$refs.addRuleFormRef);
-      this.$refs.addRuleFormRef.resetFields();
+      this.$refs.addTaskListRef.resetFields();
     },
-    addTask() {}
+    addTask() {
+      this.$refs.addTaskListRef.validate(async valid => {
+        if (!valid) {
+          return;
+        }
+        this.addTaskList.expTime = [
+          moment(this.addTaskList.expTime[0]).format("YYYY-MM-DD"),
+          moment(this.addTaskList.expTime[1]).format("YYYY-MM-DD")
+        ];
+
+        this.addTaskList.realTime = [
+          moment(this.addTaskList.realTime[0]).format("YYYY-MM-DD"),
+          moment(this.addTaskList.realTime[1]).format("YYYY-MM-DD")
+        ];
+        const { data: res } = await this.$http.post("/addTasks", {
+          parmas: this.addTaskList
+        });
+        if (res.status == 200) {
+          console.log(res);
+          this.addDialogVisible = false;
+          this.$message.success("添加成功");
+        } else {
+          this.$message.success("添加失败");
+        }
+        this.getTaskList();
+        // console.log("this.addTaskList2 :>> ", this.addTaskList);
+      });
+    }
   }
 };
 </script>
