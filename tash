@@ -1,0 +1,77 @@
+[33mcommit 512b539fc77c17c41db5ce5f048518906617ab84[m[33m ([m[1;36mHEAD -> [m[1;32msuifeng[m[33m, [m[1;31morigin/suifeng[m[33m)[m
+Author: 随风 <suifeng.wxb@xuelangyun.com>
+Date:   Mon Jul 13 17:51:50 2020 +0800
+
+    提交groupCanvas文件
+
+[33mcommit 533ccfcff8bcbf293ddacc87fae7d8cf5631cc44[m
+Author: 随风 <suifeng.wxb@xuelangyun.com>
+Date:   Mon Jul 13 17:07:05 2020 +0800
+
+    canvas去除border
+
+[33mcommit 05072c72544bbfbd6423f2d924fe240de555a0cd[m
+Author: 随风 <suifeng.wxb@xuelangyun.com>
+Date:   Mon Jul 13 16:54:12 2020 +0800
+
+    组信息展示 canvas初步编写
+
+[33mcommit e1efc13fd97d0db1818af993f6043c27c6428ca7[m
+Author: 随风 <suifeng.wxb@xuelangyun.com>
+Date:   Sat Jul 11 16:40:17 2020 +0800
+
+    组信息管理组件页面及事件逻辑完成
+
+[33mcommit ff1e4f35e093ba5373333666dddf495039825607[m
+Author: 随风 <suifeng.wxb@xuelangyun.com>
+Date:   Sat Jul 11 10:11:03 2020 +0800
+
+    test
+
+[33mcommit f68f47535349f0b51a03048b76329d3441da6959[m
+Author: 陈猛 <baicheng.cm@xuelangyun.com>
+Date:   Fri Jul 10 14:45:26 2020 +0800
+
+    任务列表展示以及删除
+
+[33mcommit fd3fba2b9be2b074fd54b2439dd0ca3f5eb99abe[m
+Author: 陈猛 <baicheng.cm@xuelangyun.com>
+Date:   Fri Jul 10 09:46:00 2020 +0800
+
+    7.9  任务列表删除及查找
+
+[33mcommit 786bff2be3592a36a50d330fa806cdff1e8689a4[m
+Author: 陈猛 <baicheng.cm@xuelangyun.com>
+Date:   Thu Jul 9 09:03:48 2020 +0800
+
+    7.8页面
+
+[33mcommit 202f911f15f4abd75c6164b54fdab72525782fd5[m
+Author: 陈猛 <baicheng.cm@xuelangyun.com>
+Date:   Wed Jul 8 22:24:48 2020 +0800
+
+    用户项目管理
+
+[33mcommit 2602704717f3e4293d1ab0217bd664956f7d0158[m
+Author: muyi <940955635@qq.com>
+Date:   Wed Jul 8 19:05:54 2020 +0800
+
+    用户管理和项目管理
+
+[33mcommit 630c7fae63c49fedea4da4f14120d8d37c50946a[m
+Author: 陈猛 <baicheng.cm@xuelangyun.com>
+Date:   Wed Jul 8 14:23:42 2020 +0800
+
+    项目重新搭建-webpack
+
+[33mcommit e6cc57fa6518f439cbd8462c678486f63fffbeea[m[33m ([m[1;32mlogin[m[33m)[m
+Author: henucm <1061850552@qq.com>
+Date:   Tue Jul 7 22:09:26 2020 +0800
+
+    项目搭建
+
+[33mcommit 8d32a3aee4c09877c566a939d0518073c5e7f150[m
+Author: henucm <1061850552@qq.com>
+Date:   Mon Jul 6 13:53:12 2020 +0800
+
+    init
