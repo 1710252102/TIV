@@ -151,7 +151,6 @@ export default {
     }
   },
   mounted() {
-    
     this.drawCol();
     this.drawRow();
     this.drawContent();
@@ -159,6 +158,7 @@ export default {
     content.addEventListener("scroll", function() {
       var top = this.scrollTop;
       var left = this.scrollLeft;
+      console.log('left :>> ', left);
       document.querySelector("#col").style.transform = `translateY(-${top}px)`;
       document.querySelector("#row").style.transform = `translateX(-${left}px)`;
     });
@@ -168,12 +168,14 @@ export default {
     drawRow() {
       let cas = document.querySelector("#col");
       cas.width = this.gridWidth * 4 + "";
+      this.taskNum = 0;
       for (let i = 0; i < this.lineArr[0].projectList.length; i++) {
         this.taskNum += this.lineArr[0].projectList[i].task.length;
       }
       cas.height = this.gridHeight * this.taskNum + "";
       //  拿到canvas绘图上下文
       var ctx = cas.getContext("2d");
+      ctx.clearRect(0, 0, this.gridWidth * 4, this.gridHeight * this.taskNum);
       ctx.font = "12px Courier New"; // 文字
       ctx.strokeStyle = "#999"; //
       ctx.textAlign = "center";
@@ -226,12 +228,14 @@ export default {
     // 画右上
     drawCol() {
       let cas = document.querySelector("#row");
+      this.dateNum = 0;
       for (let i = 0; i < this.dateList.length; i++) {
         this.dateNum += this.dateList[i].children.length;
       }
       cas.width = this.gridWidth * this.dateNum;
       cas.height = this.gridHeight * 2;
       let ctx = cas.getContext("2d");
+      ctx.clearRect(0, 0, this.gridWidth * this.dateNum, this.gridHeight * 2);
       ctx.font = "18px Courier New"; // 文字
       ctx.strokeStyle = "#333"; //
       ctx.textAlign = "center";
@@ -274,6 +278,12 @@ export default {
       cas.width = this.gridWidth * this.dateNum;
       cas.height = this.gridHeight * this.taskNum;
       var ctx = cas.getContext("2d");
+      ctx.clearRect(
+        0,
+        0,
+        this.gridWidth * this.dateNum,
+        this.gridHeight * this.taskNum
+      );
       ctx.font = "18px Courier New"; // 文字
       ctx.strokeStyle = "#333"; //
       ctx.textAlign = "center";
@@ -334,6 +344,7 @@ export default {
           });
         }
       }
+      this.drawCol();
       this.drawCol();
       this.drawContent();
     }
