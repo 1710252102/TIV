@@ -17,9 +17,9 @@
           ref="loginFormRef"
         >
           <!-- 用户名 -->
-          <el-form-item prop="username">
+          <el-form-item prop="account">
             <el-input
-              v-model="loginForm.username"
+              v-model="loginForm.account"
               prefix-icon="el-icon-s-custom"
             ></el-input>
           </el-form-item>
@@ -48,11 +48,11 @@ export default {
     return {
       // 登录表单的数据绑定对象
       loginForm: {
-        username: "admin",
-        password: "123456"
+        account: "admin",
+        password: "admin123"
       },
       loginFormRules: {
-        username: [
+        account: [
           { required: true, message: "请输入账号", trigger: "blur" },
           {
             min: 3,
@@ -90,10 +90,13 @@ export default {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
         const { data: res } = await this.$http.post("/login", this.loginForm);
-        if (res.status !== 200) return this.$message.error("登录失败! ");
+
+        console.log(res);
+        
+        if (res.code !== 200) return this.$message.error("登录失败! ");
         this.$message.success("登录成功");
         window.sessionStorage.setItem("token", res.data.token);
-        console.log(res.data.token);
+        // console.log(res.data.token);
         this.$router.push("/home");
       });
     }
