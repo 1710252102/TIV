@@ -9,10 +9,11 @@ import "element-ui/lib/theme-chalk/index.css";
 // import 'lib-flexible/flexible.js'
 // 配置请求的根路径
 // axios.defaults.baseURL = "http://timemeetyou.com:8889/api/private/v1/";
-axios.defaults.baseURL = "/account/";
+// axios.defaults.baseURL = "/";
 axios.interceptors.request.use(config => {
   console.log(config);
-  config.headers.Authorization = window.sessionStorage.getItem("token");
+  config.headers.Authorization =
+    "Bearer " + window.sessionStorage.getItem("token");
   return config;
 });
 Vue.config.productionTip = false;

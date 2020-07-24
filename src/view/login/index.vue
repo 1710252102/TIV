@@ -89,7 +89,7 @@ export default {
       // 预校验
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
-        const { data: res } = await this.$http.post("/login", this.loginForm);
+        const { data: res } = await this.$http.post("/account/login", this.loginForm);
 
         console.log(res);
         
